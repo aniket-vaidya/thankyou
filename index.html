@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Thank You!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
+  /* Root and body styling for dark tech theme */
+  body {
+    margin: 0;
+    padding: 0;
+    background: #0d1117;
+    color: #58d68d;
+    font-family: 'Fira Code', monospace;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Code rain canvas */
+  #matrix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+  }
+
+  /* Container with semi-transparent panel and neon glow */
+  .container {
+    position: relative;
+    background: rgba(10, 25, 45, 0.85);
+    border: 2px solid #28a745;
+    border-radius: 12px;
+    padding: 3rem 4rem;
+    max-width: 600px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 0 12px #28a745,
+      0 0 20px #28a745,
+      0 0 30px #82e0aa,
+      0 0 40px #28a745;
+    text-align: center;
+    z-index: 1;
+  }
+
+  /* Title text with subtle glitch effect */
+  h1 {
+    font-size: 4rem;
+    margin: 0 0 0.5rem 0;
+    position: relative;
+    color: #58d68d;
+    text-shadow:
+      0 0 5px #55ff7a,
+      0 0 10px #28a745,
+      0 0 20px #28a745,
+      0 0 30px #82e0aa,
+      0 0 40px #28a745;
+  }
+
+  /* Glitch layering */
+  h1::before, h1::after {
+    content: 'Thank You!';
+    position: absolute;
+    left: 0;
+    right: 0;
+    opacity: 0.7;
+  }
+
+  h1::before {
+    top: -2px;
+    color: #33ff77;
+    clip-path: polygon(0 2%, 100% 2%, 100% 10%, 0 10%);
+    animation: glitchTop 2s infinite linear alternate-reverse;
+  }
+
+  h1::after {
+    top: 2px;
+    color: #1aff62;
+    clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%);
+    animation: glitchBottom 3s infinite linear alternate-reverse;
+  }
+
+  /* Paragraph text styling */
+  p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 0;
+    color: #a2d9ce;
+    text-shadow: 0 0 5px #10ac84;
+  }
+
+  /* Animated scanning line over the container */
+  .scanner {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: linear-gradient(0deg, transparent 30%, #28a74580 50%, transparent 70%);
+    animation: scan 3s linear infinite;
+    border-radius: 12px;
+    z-index: 1;
+  }
+
+  /* Keyframes for glitch and scan */
+  @keyframes glitchTop {
+    0% { clip-path: polygon(0 2%, 100% 2%, 100% 10%, 0 10%); transform: translate(0) skew(0deg); }
+    20% { clip-path: polygon(0 5%, 100% 5%, 100% 12%, 0 12%); transform: translate(-2px, -1px) skew(5deg); }
+    40% { clip-path: polygon(0 3%, 100% 3%, 100% 11%, 0 11%); transform: translate(2px, 1px) skew(-5deg); }
+    60% { clip-path: polygon(0 4%, 100% 4%, 100% 12%, 0 12%); transform: translate(-1px, 2px) skew(3deg); }
+    80% { clip-path: polygon(0 2%, 100% 2%, 100% 10%, 0 10%); transform: translate(1px, -1px) skew(-3deg); }
+    100% { clip-path: polygon(0 2%, 100% 2%, 100% 10%, 0 10%); transform: translate(0) skew(0deg); }
+  }
+
+  @keyframes glitchBottom {
+    0% { clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%); transform: translate(0) skew(0deg); }
+    20% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); transform: translate(2px, 1px) skew(-6deg); }
+    40% { clip-path: polygon(0 88%, 100% 88%, 100% 96%, 0 96%); transform: translate(-2px, -1px) skew(6deg); }
+    60% { clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%); transform: translate(1px, -2px) skew(-3deg); }
+    80% { clip-path: polygon(0 82%, 100% 82%, 100% 91%, 0 91%); transform: translate(-1px, 1px) skew(4deg); }
+    100% { clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%); transform: translate(0) skew(0deg); }
+  }
+
+  @keyframes scan {
+    0% { top: 0%; }
+    100% { top: 100%; }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .container {
+      padding: 2rem 1.5rem;
+    }
+    h1 {
+      font-size: 3rem;
+    }
+    p {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="container" role="main" aria-label="Thank you message">
+  <h1>Thank You!</h1>
+  <p>From the core of my code,<br />I appreciate all your warm birthday wishes.</p>
+  <div class="scanner"></div>
+</div>
+
+<script>
+  /* Matrix rain effect */
+  const canvas = document.getElementById("matrix");
+  const ctx = canvas.getContext("2d");
+
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  const letters = "0123456789ABCDEF#@$%&*!+-=<>?";
+  const fontSize = 18;
+  const columns = Math.floor(width / fontSize);
+
+  // An array of drops - one per column
+  const drops = [];
+
+  for (let x = 0; x < columns; x++) {
+    drops[x] = Math.floor(Math.random() * height / fontSize);
+  }
+
+  function draw() {
+    // Black background with transparency for trail effect
+    ctx.fillStyle = "rgba(13,17,23,0.1)";
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.fillStyle = "#58d68d"; // Neon green
+    ctx.font = fontSize + "px 'Fira Code', monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters.charAt(Math.floor(Math.random() * letters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > height && Math.random() > 0.975) {
+        drops[i] = 0;
+      } else {
+        drops[i]++;
+      }
+    }
+  }
+
+  setInterval(draw, 50);
+
+  // Responsive canvas size
+  window.addEventListener("resize", () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>
+
